@@ -8,7 +8,39 @@
     <link rel="icon" href="images/logo/logo (1).png" />
     <link href="style.css" rel="stylesheet" />
   </head>
+  <style>
+    .video-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
 
+    /* Popup content */
+    .video-popup iframe {
+      width: 80%;
+      height: 80%;
+      border: none;
+      border-radius: 10px;
+    }
+
+    /* Close button */
+    .close-btn {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
   <body
     x-data="{ page: 'home', 'darkMode': true, 'stickyMenu': false, 'navigationOpen': false, 'scrollTop': false }"
     x-init="
@@ -289,16 +321,24 @@
                 project delivers exceptional user experience and performance.
               </p>
 
-              <a
-                href="https://www.youtube.com/live/A3bmei6xQI8?si=ptVjKXGQlBcwVyau"
-                target="_blank"
-              >
+              <a href="#" id="openVideo">
                 <span class="tc wf xf be dd rg i gh ua about-us-video">
-                  <span class="nf h vc yc vd rg gh qk -ud-z-1"></span>
-                  <img src="images/icon-play.svg" alt="Play" />
+                  <img src="images/icon-play.svg" alt="Play" width="30" />
                 </span>
                 <span class="kk">SEE HOW WE WORK</span>
               </a>
+
+              <!-- Video popup -->
+              <div class="video-popup" id="videoPopup">
+                <span class="close-btn" id="closePopup">&times;</span>
+                <iframe
+                  id="youtubeFrame"
+                  src=""
+                  allow="autoplay; encrypted-media"
+                  allowfullscreen
+                >
+                </iframe>
+              </div>
             </div>
           </div>
         </div>
@@ -1190,5 +1230,41 @@
       };
     </script>
     <script defer src="bundle.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const openBtn = document.getElementById("openVideo");
+        const popup = document.getElementById("videoPopup");
+        const closeBtn = document.getElementById("closePopup");
+        const iframe = document.getElementById("youtubeFrame");
+
+        const videoURL = "https://www.youtube.com/embed/gIU5SVioIOA?autoplay=1";
+
+        if (openBtn && popup && closeBtn && iframe) {
+          // Open popup and play video
+          openBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            iframe.src = videoURL;
+            popup.style.display = "flex";
+          });
+
+          // Close popup and stop video
+          const closePopup = () => {
+            popup.style.display = "none";
+            iframe.src = ""; // stops the video
+          };
+
+          closeBtn.addEventListener("click", closePopup);
+
+          // Close popup if user clicks outside iframe area
+          popup.addEventListener("click", (e) => {
+            if (e.target === popup) {
+              closePopup();
+            }
+          });
+        } else {
+          console.error("Popup elements not found in DOM!");
+        }
+      });
+    </script>
   </body>
 </html>
